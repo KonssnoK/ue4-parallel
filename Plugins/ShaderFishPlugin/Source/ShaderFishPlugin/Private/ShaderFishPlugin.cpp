@@ -6,8 +6,8 @@
 #include "ShaderParameterUtils.h"
 #include "RHIStaticStates.h"
 
-IMPLEMENT_UNIFORM_BUFFER_STRUCT(FConstantParameters, TEXT("constants"))
-IMPLEMENT_UNIFORM_BUFFER_STRUCT(FVariableParameters, TEXT("variables"))
+IMPLEMENT_GLOBAL_SHADER_PARAMETER_STRUCT(FConstantParameters, "constants");
+IMPLEMENT_GLOBAL_SHADER_PARAMETER_STRUCT(FVariableParameters, "variables");
 
 FShaderFishPluginModule::FShaderFishPluginModule(const ShaderMetaType::CompiledShaderInitializerType& Initializer)
 	: FGlobalShader(Initializer)
@@ -46,6 +46,6 @@ bool FShaderFishPluginModule::ShouldCompilePermutation(const FGlobalShaderPermut
 	return true;
 }
 
-IMPLEMENT_SHADER_TYPE(, FShaderFishPluginModule, TEXT("/Plugin/ShaderFishPlugin/Private/ComputeFishShader.usf"),       TEXT("VS_test"),       SF_Compute);
+IMPLEMENT_SHADER_TYPE(, FShaderFishPluginModule, TEXT("/Plugin/ShaderFishPlugin/Private/ComputeFishShader.usf"), TEXT("VS_test"), SF_Compute);
 
 IMPLEMENT_MODULE(FDefaultModuleImpl, ShaderFishPlugin)

@@ -6,25 +6,25 @@
 #include "UniformBuffer.h"
 #include "RHICommandList.h"
 
-BEGIN_UNIFORM_BUFFER_STRUCT(FConstantParameters, )
-UNIFORM_MEMBER(int, fishCount)
-UNIFORM_MEMBER(float, radiusCohesion)
-UNIFORM_MEMBER(float, radiusSeparation)
-UNIFORM_MEMBER(float, radiusAlignment)
-UNIFORM_MEMBER(float, mapRangeX)
-UNIFORM_MEMBER(float, mapRangeY)
-UNIFORM_MEMBER(float, mapRangeZ)
-UNIFORM_MEMBER(float, kCohesion)
-UNIFORM_MEMBER(float, kSeparation)
-UNIFORM_MEMBER(float, kAlignment)
-UNIFORM_MEMBER(float, maxAcceleration)
-UNIFORM_MEMBER(float, maxVelocity)
-UNIFORM_MEMBER(int, calculationsPerThread)
-END_UNIFORM_BUFFER_STRUCT(FConstantParameters)
+BEGIN_GLOBAL_SHADER_PARAMETER_STRUCT(FConstantParameters, )
+SHADER_PARAMETER(int, fishCount)
+SHADER_PARAMETER(float, radiusCohesion)
+SHADER_PARAMETER(float, radiusSeparation)
+SHADER_PARAMETER(float, radiusAlignment)
+SHADER_PARAMETER(float, mapRangeX)
+SHADER_PARAMETER(float, mapRangeY)
+SHADER_PARAMETER(float, mapRangeZ)
+SHADER_PARAMETER(float, kCohesion)
+SHADER_PARAMETER(float, kSeparation)
+SHADER_PARAMETER(float, kAlignment)
+SHADER_PARAMETER(float, maxAcceleration)
+SHADER_PARAMETER(float, maxVelocity)
+SHADER_PARAMETER(int, calculationsPerThread)
+END_GLOBAL_SHADER_PARAMETER_STRUCT()
 
-BEGIN_UNIFORM_BUFFER_STRUCT(FVariableParameters, )
-UNIFORM_MEMBER(float, DeltaTime)
-END_UNIFORM_BUFFER_STRUCT(FVariableParameters)
+BEGIN_GLOBAL_SHADER_PARAMETER_STRUCT(FVariableParameters, )
+SHADER_PARAMETER(float, DeltaTime)
+END_GLOBAL_SHADER_PARAMETER_STRUCT()
 
 typedef TUniformBufferRef<FConstantParameters> FConstantParametersRef;
 typedef TUniformBufferRef<FVariableParameters> FVariableParametersRef;

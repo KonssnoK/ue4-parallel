@@ -31,7 +31,6 @@ public class ShaderFishPlugin : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "RenderCore",
-                "ShaderCore",
                 "RHI"
 				// ... add other public dependencies that you statically link with here ...
 			}
