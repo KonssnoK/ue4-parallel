@@ -267,15 +267,17 @@ void AFishAgent::cpuCalculate(FishState **&agents, float DeltaTime, bool isSingl
 			alignment.Normalize();
 		}
 
+		//Update current state for the fish 
 		agents[fishNum][currentStatesIndex].acceleration = (cohesion * kCoh + separation * kSep + alignment * kAlign).GetClampedToMaxSize(maxAccel);
 		agents[fishNum][currentStatesIndex].acceleration.Z = 0;
 
-		agents[fishNum][currentStatesIndex].velocity += agents[fishNum][currentStatesIndex].acceleration * DeltaTime;
-		agents[fishNum][currentStatesIndex].velocity  = agents[fishNum][currentStatesIndex].velocity.GetClampedToMaxSize(maxVel);
-		agents[fishNum][currentStatesIndex].position += agents[fishNum][currentStatesIndex].velocity * DeltaTime;
+		agents[fishNum][currentStatesIndex].velocity = agents[fishNum][previousStatesIndex].velocity + (agents[fishNum][currentStatesIndex].acceleration * DeltaTime);
+		agents[fishNum][currentStatesIndex].velocity = agents[fishNum][currentStatesIndex].velocity.GetClampedToMaxSize(maxVel);
+		agents[fishNum][currentStatesIndex].position = agents[fishNum][previousStatesIndex].position + (agents[fishNum][currentStatesIndex].velocity * DeltaTime);
 		agents[fishNum][currentStatesIndex].velocity = checkMapRange(mapSz, agents[fishNum][currentStatesIndex].position, agents[fishNum][currentStatesIndex].velocity);
 	}, isSingleThread);
 
+	//Check for collisions
 	for (int i = 0; i < cnt; i++) {
 		FHitResult hit(ForceInit);
 		if (collisionDetected(agents[i][previousStatesIndex].position, agents[i][currentStatesIndex].position, hit)) {
@@ -285,14 +287,16 @@ void AFishAgent::cpuCalculate(FishState **&agents, float DeltaTime, bool isSingl
 		}
 	}
 
+	//Finally move the fish
 	for (int i = 0; i < cnt; i++) {
 		FTransform transform;
-		m_instancedStaticMeshComponent->GetInstanceTransform(agents[i][0].instanceId, transform);
-		transform.SetLocation(agents[i][0].position);
-		FVector direction = agents[i][0].velocity;
+		m_instancedStaticMeshComponent->GetInstanceTransform(agents[i][currentStatesIndex].instanceId, transform, true);
+		transform.SetLocation(agents[i][currentStatesIndex].position);
+		FVector direction = agents[i][currentStatesIndex].velocity;
 		direction.Normalize();
-		transform.SetRotation(FRotationMatrix::MakeFromX(direction).Rotator().Add(0.f, -90.f, 0.f).Quaternion());
-		m_instancedStaticMeshComponent->UpdateInstanceTransform(agents[i][0].instanceId, transform, false, false);
+		transform.SetRotation(FRotationMatrix::MakeFromX(direction).Rotator().Quaternion());
+		//transform.SetRotation(FRotationMatrix::MakeFromX(direction).Rotator().Add(0.f, -90.f, 0.f).Quaternion());
+		m_instancedStaticMeshComponent->UpdateInstanceTransform(agents[i][currentStatesIndex].instanceId, transform, true, false, false);
 	}
 
 	m_instancedStaticMeshComponent->ReleasePerInstanceRenderData();
